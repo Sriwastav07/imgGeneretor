@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['"Inter"', 'sans-serif']
+          },
+          animation: {
+            'gradient': 'gradient 8s ease infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+            'shake': 'shake 0.5s ease-in-out',
+            'slide-up': 'slide-up 0.3s ease-out',
+            'bounce-in': 'bounce-in 0.6s ease-out'
+          }
+          
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #5c38ee;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+   </script>
+</head>
+<body id="page" class="font-inter p-0 m-0 box-border flex justify-center items-center min-h-screen transition-colors duration-500 bg-indigo-300 dark:bg-indigo-950 py-4 px-4">
+    <div class="container bg-white dark:bg-slate-700 p-4 sm:p-6 md:p-8 lg:p-10 rounded-3xl w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl shadow-xl relative overflow-hidden mx-auto">
+        <!-- header -->
+         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-t-3xl"></div>
+
+        <header class="header flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+            <div class="logo-wrapper flex gap-4 items-center">
+                <div class="logo w-8 h-8 sm:w-10 sm:h-10 bg-indigo-500 flex justify-center items-center rounded-xl text-white">
+                    <i class="fa-solid fa-wand-magic-sparkles text-sm sm:text-base"></i>
+                </div>
+                <h1 class="font-bold text-xl sm:text-2xl text-stone-900 dark:text-white text-center sm:text-left">AI Image Generator</h1>
+            </div>
+            <button onclick="setTheme()" class="bg-stone-300 dark:bg-slate-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full text-stone-600 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                <i id="theme-icon" class="fa-solid fa-moon text-sm sm:text-base"></i>
+            </button>
+        </header>
+
+        <!-- prompt-container -->
+        <div class="main-content mt-6 sm:mt-8 md:mt-10">
+            <form action="#" class="prompt-form">
+                <div class="prompt-container w-full mb-6 sm:mb-8 md:mb-10 relative">
+                    <textarea class="prompt-input w-full min-h-[80px] sm:min-h-[100px] md:min-h-[110px] pt-3 pl-3 pr-12 sm:pr-16 bg-stone-100 dark:bg-slate-800 dark:text-white rounded-xl border border-3 border-stone-400 focus:outline-none focus:shadow-2xl focus:border-3 focus:border-indigo-800 text-sm sm:text-base" placeholder="Describe your imagination in details..." required
+                      autofocus></textarea>
+                    <button type="button" class="prompt-btn absolute right-2 sm:right-3 md:right-5 bottom-2 sm:bottom-3 md:bottom-5 w-8 h-8 sm:w-10 sm:h-10 bg-indigo-600 text-white rounded-full opacity-75 hover:opacity-100 transform hover:-translate-y-1 transition-all duration-300 ease-in-out">
+                        <i class="fa-solid fa-dice text-sm sm:text-base"></i>
+                    </button>
+                </div>
+
+                <!-- prompt-action -->
+                <div class="prompt-action flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-center">
+
+                    <div class="select-wrapper w-full sm:w-auto">
+                        <select id="count-select" class="custom-select bg-stone-100 dark:bg-slate-800 dark:text-white h-10 rounded-xl border border-stone-400 w-full sm:w-[160px] md:w-[180px] outline-none cursor-pointer hover:border-indigo-800 hover:shadow-xl text-sm sm:text-base px-4 pr-10 transition-all duration-300 focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 appearance-none bg-no-repeat bg-right" required>
+                            <option value="" selected disabled>Image Count</option>
+                            <option value="1">1 Image</option>
+                            <option value="2">2 Images</option>
+                            <option value="3">3 Images</option>
+                            <option value="4">4 Images</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="generate-btn bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 h-10 rounded-xl w-full sm:w-[160px] md:w-[180px] text-white hover:shadow-xl hover:transition duration-300 ease-in-out transform hover:-translate-y-1 hover:bg-indigo-600 text-sm sm:text-base">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
+                        Generate
+                    </button>
+                </div>
+
+                <!-- result gallery grid -->
+                 <div class="gallery-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10 mt-6 sm:mt-8 md:mt-10 hidden">
+                    <div class="img-card loading relative h-32 sm:h-36 md:h-40 w-full hover:transition duration-300 ease-in-out transform hover:-translate-y-1 group shadow-lg rounded-xl overflow-hidden">
+                        <div class="status-container absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center hidden">
+                            <div class="spinner mb-2"></div>
+                            <p class="status-text text-xs sm:text-sm text-gray-700">Generating...</p>
+                        </div>
+                        <img src="" class="res-img h-full w-full object-cover rounded-xl">
+                        <div class="img-overlay absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-stone-600 opacity-0 group-hover:opacity-50 rounded-full hover:transition duration-300 ease-in-out transform hover:-translate-y-1 pointer-events-none group-hover:pointer-events-auto">
+                            <button class="img-download-btn h-8 w-8 sm:h-10 sm:w-10 backdrop-grayscale-200 text-white">
+                                <i class="fa-solid fa-download text-xs sm:text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="img-card loading relative h-32 sm:h-36 md:h-40 w-full hover:transition duration-300 ease-in-out transform hover:-translate-y-1 group shadow-lg rounded-xl overflow-hidden">
+                        <div class="status-container absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center hidden">
+                            <div class="spinner mb-2"></div>
+                            <p class="status-text text-xs sm:text-sm text-gray-700">Generating...</p>
+                        </div>
+                        <img src="" class="res-img h-full w-full object-cover rounded-xl">
+                        <div class="img-overlay absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-stone-600 rounded-full opacity-0 group-hover:opacity-50 hover:transition duration-300 ease-in-out transform hover:-translate-y-1 pointer-events-none group-hover:pointer-events-auto">
+                            <button class="img-download-btn h-8 w-8 sm:h-10 sm:w-10 backdrop-grayscale-200 text-white">
+                                <i class="fa-solid fa-download text-xs sm:text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="img-card relative h-32 sm:h-36 md:h-40 w-full hover:transition duration-300 ease-in-out transform hover:-translate-y-1 group shadow-lg rounded-xl overflow-hidden">
+                        <div class="status-container absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center hidden">
+                            <div class="spinner mb-2"></div>
+                            <p class="status-text text-xs sm:text-sm text-gray-700">Generating...</p>
+                        </div>
+                        <img src="" class="res-img h-full w-full object-cover rounded-xl">
+                        <div class="img-overlay absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-stone-600 rounded-full opacity-0 group-hover:opacity-50 hover:transition duration-300 ease-in-out transform hover:-translate-y-1 pointer-events-none group-hover:pointer-events-auto">
+                            <button class="img-download-btn h-8 w-8 sm:h-10 sm:w-10 backdrop-grayscale-200 text-white">
+                                <i class="fa-solid fa-download text-xs sm:text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="img-card relative h-32 sm:h-36 md:h-40 w-full hover:transition duration-300 ease-in-out transform hover:-translate-y-1 group shadow-lg rounded-xl overflow-hidden">
+                        <div class="status-container absolute inset-0 bg-white/80 z-10 flex flex-col items-center justify-center hidden">
+                            <div class="spinner mb-2"></div>
+                            <p class="status-text text-xs sm:text-sm text-gray-700">Generating...</p>
+                        </div>
+                        <img src="" class="res-img h-full w-full object-cover rounded-xl">
+                        <div class="img-overlay absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-stone-600 rounded-full opacity-0 group-hover:opacity-50 hover:transition duration-300 ease-in-out transform hover:-translate-y-1 pointer-events-none group-hover:pointer-events-auto">
+                            <button class="img-download-btn h-8 w-8 sm:h-10 sm:w-10 backdrop-grayscale-200 text-white">
+                                <i class="fa-solid fa-download text-xs sm:text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                 </div>
+            </form>
+        </div>
+    </div>
+    <script src="imgGenerator.js"></script>
+</body>
+</html>
